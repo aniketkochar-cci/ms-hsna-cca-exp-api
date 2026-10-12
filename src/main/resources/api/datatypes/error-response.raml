@@ -1,0 +1,50 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  response:
+    type: object
+    properties:
+      sourceSystemRefId:
+        type: string
+        required: true
+        example: <<unique Id from source system>>
+      sourceSystemName:
+        type: string
+        required: true
+        example: CCA
+      sourceSystemVersion:
+        type: string
+        required: true
+        example: '1.0'
+      transactionId:
+        type: string
+        required: true
+        example: <<Mulesoft Correlation ID>>
+      outcome:
+        type: object
+        required: true
+        properties:
+          resultCode:
+            type: string
+            required: true
+            example: '200'
+          resultDescription:
+            type: string
+            required: true
+            example: No contact found
+      errorDetails:
+        type: object
+        required: true
+        properties:
+          errorDetail:
+            type: object
+            required: true
+            properties:
+              errorCode:
+                type: string
+                required: true
+                example: '404'
+              errorDescription:
+                type: string
+                required: true
+                example: No contact found for the supplied search criteria

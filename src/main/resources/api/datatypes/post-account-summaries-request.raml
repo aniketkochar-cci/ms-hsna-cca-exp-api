@@ -1,0 +1,38 @@
+#%RAML 1.0 DataType 
+type: object
+properties:
+  request:
+    type: object
+    properties:
+      sourceSystemName:
+        type: string
+        example: CCA
+        description: Calling System
+      sourceSystemVersion:
+        type: string
+        example: '1'
+        description: Version of the calling system/contract
+      sourceSystemRefId:
+        type: string
+        example: <<unique Id from source system>>
+        description: Unique Is from the source system; echoed on the response used for traceability
+      getAccountSummaryRequest:
+        type: object
+        properties:
+          contactId:
+            type: string
+            example: '13829902'
+            description: CCA contact identifier
+          accountAddressId:
+            type: string
+            example: '14746847'
+            description: CCA address identifier
+          contractStatusActive:
+            type: boolean
+            example: true
+            description: true = active contracts only; omitted or false = all contracts
+            required: false
+          customerRef:
+            type: string
+            description: Customer reference
+            required: false

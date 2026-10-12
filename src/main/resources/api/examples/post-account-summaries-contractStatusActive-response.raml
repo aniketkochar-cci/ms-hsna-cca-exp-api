@@ -1,0 +1,49 @@
+#%RAML 1.0 NamedExample
+value:
+  response:
+    sourceSystemRefId: "<<unique Id from source system>>"
+    sourceSystemName: "CCA"
+    sourceSystemVersion: "1.0"
+    transactionId: "<<Mulesoft Correlation ID>>"
+    outcome:
+      resultCode: "100"
+      resultDescription: "Success"
+    getAccountSummaryResponse:
+      contactCollection:
+        - contactId: "13829902"
+          firstName: "John"
+          lastName: "Doe"
+          homephone: "234567890"
+          mobilephone: "9876543210"
+          email: "johndoe@example.com"
+          addressCollection:
+            - accountAddressId: "14746847"
+              customerRef: "141711623"
+              addressType: "Service"
+              houseNo: "123"
+              addressLine1: "Main Street"
+              addressLine2: "Apt 1"
+              city: "Cityville"
+              state: "Stateville"
+              zipCode: "12345"
+              country: "USA"
+              locationType: "RESIDENTIAL"
+              addressExternalId: ""
+              contractCollection:
+                - contractId: "53871076"
+                  contractPublicRef: "206384884"
+                  optionPosition: 1
+                  version: 1
+                  contractStatusCode: "c"
+                  contractStatusName: "Started"
+                  coverageStartDate: "2024-02-11"
+                  coverageEndDate: "2025-01-11"
+                  startDate: "2025-01-12"
+                  productOfferCode: "8372"
+                  contractname: "Premier Exterior Line"
+                  partnerCode: "K8"
+                  partnerName: "CenterPoint Energy Mississippi - K8"
+                  companyName: ""
+                  contractStatusDescription: "Active"
+                  serviceCustomerRef: ""
+                  serviceCallFee: 75.0

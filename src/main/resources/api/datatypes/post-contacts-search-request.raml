@@ -1,0 +1,93 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  request:
+    type: object
+    properties:
+      sourceSystemName:
+        type: string
+        enum: [CCA]
+        example: CCA
+        description: Calling System. Allowed value - CCA
+      sourceSystemVersion:
+        type: string
+        example: '1.0'
+        description: Version of the calling system/contract
+      sourceSystemRefId:
+        type: string
+        example: <<unique Id from source system>>
+        description: Unique Id from the source system; echoed on the response, used for traceability
+      getContactRequest:
+        type: object
+        description: Search criteria. All fields are individually optional but at least one must be non-blank. Multiple criteria can be combined.
+        properties:
+          contactId:
+            type: string
+            example: '13829902'
+            description: CCA contact identifier (exact match)
+            required: false
+          email:
+            type: string
+            example: 'fink1705@gmail.com'
+            description: Contact email (case-insensitive exact match)
+            required: false
+          firstName:
+            type: string
+            example: 'Brian'
+            description: Contact first name
+            required: false
+          lastName:
+            type: string
+            example: 'Fink'
+            description: Contact last name; may be blank
+            required: false
+          houseNo:
+            type: string
+            example: '1746'
+            description: House / street number of the service address
+            required: false
+          street:
+            type: string
+            example: '1746 Addie Pkwy'
+            description: Street address line; compared with addressLine1 of the response
+            required: false
+          city:
+            type: string
+            example: 'Oshkosh'
+            description: City
+            required: false
+          state:
+            type: string
+            example: 'WI'
+            description: State code
+            required: false
+          zipcode:
+            type: string
+            example: '54904'
+            description: 5-digit US ZIP
+            required: false
+          country:
+            type: string
+            example: 'USA'
+            description: Country code
+            required: false
+          identityManager:
+            type: string
+            example: 'Okta'
+            description: Identity provider, e.g. Okta/Auth0
+            required: false
+          identityUniqueId:
+            type: string
+            example: '00u1abcd2EFGH3ijk4l5'
+            description: Unique ID at the identity provider
+            required: false
+          telephone:
+            type: string
+            example: '9089121038'
+            description: Phone number (ANI1 or ANI2), one number at a time; compared against mobile, home and work phone
+            required: false
+          accountAddressId:
+            type: string
+            example: '14746846'
+            description: CCA address identifier (exact match)
+            required: false
