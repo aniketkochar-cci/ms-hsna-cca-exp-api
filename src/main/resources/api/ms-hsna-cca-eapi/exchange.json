@@ -1,0 +1,11 @@
+{
+  "main": "ms-hsna-cca-eapi.raml",
+  "name": "ms-hsna-cca-eapi",
+  "classifier": "raml",
+  "tags": [],
+  "descriptorVersion": "1.0.0",
+  "dependencies": [],
+  "groupId": "6a10cf61-1a0d-4637-8256-60997d4f5993",
+  "assetId": "ms-hsna-cca-eapi",
+  "version": "1.0.0"
+}

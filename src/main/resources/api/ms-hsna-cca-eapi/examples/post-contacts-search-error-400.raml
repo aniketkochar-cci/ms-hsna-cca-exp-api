@@ -1,0 +1,14 @@
+#%RAML 1.0 NamedExample
+value:
+  response:
+    sourceSystemRefId: "<<unique Id from source system>>"
+    sourceSystemName: "CCA"
+    sourceSystemVersion: "1.0"
+    transactionId: "<<Mulesoft Correlation ID>>"
+    outcome:
+      resultCode: "200"
+      resultDescription: "Bad Request"
+    errorDetails:
+      errorDetail:
+        errorCode: "400"
+        errorDescription: "At least one search criterion is required in getContactRequest"

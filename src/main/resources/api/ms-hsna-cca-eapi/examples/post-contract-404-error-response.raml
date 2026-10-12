@@ -1,0 +1,14 @@
+#%RAML 1.0 NamedExample
+value:
+  response:
+    sourceSystemRefId: "<<unique Id from source system>>"
+    sourceSystemName: "CCA"
+    sourceSystemVersion: "1.0"
+    transactionId: "<<Mulesoft Correlation ID>>"
+    outcome:
+      resultCode: "200"
+      resultDescription: "No contact found"
+    errorDetails:
+      errorDetail:
+        errorCode: "404"
+        errorDescription: "No contact found for the supplied contract"

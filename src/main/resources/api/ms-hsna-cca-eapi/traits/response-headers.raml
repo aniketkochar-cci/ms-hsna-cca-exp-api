@@ -1,0 +1,24 @@
+#%RAML 1.0 Trait
+
+responses:
+  200:
+    headers:
+      X-Correlation-ID:
+        type: string
+        description: MuleSoft correlation ID used to trace the request.
+        example: "7b9f4c2a-1234-4567-8901-abcdef123456"
+
+      X-Trace-ID:
+        type: string
+        description: Trace ID used for request tracing.
+        example: "8c0f5d3b-2345-5678-9012-bcdefa234567"
+      
+      Content-Type:
+        type: string
+        example: application/json
+
+      Cache-Control?:
+        type: string
+        description: Prevents caching of the response.
+        example: "no-store"
+        required: false

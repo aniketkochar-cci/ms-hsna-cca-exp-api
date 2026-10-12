@@ -1,0 +1,27 @@
+#%RAML 1.0 SecurityScheme
+type: OAuth 2.0
+description: |
+  OAuth 2.0 security scheme for Provider name 
+  Apply the OAuth 2.0 security policy to resource methods for authenticating API requests
+
+describedBy:
+  headers:
+      Authorization:
+        description: |
+          Used to send a valid OAuth 2 access token.
+        type: string
+        example:
+         Bearer cdY0eXAiOiJKV1QiLCJ6aXAiOiJOT05iwiPR
+
+  responses:
+    401:
+      description: |
+        Bad or expired token. This can happen if the API consumer uses a revoked or expired access token. Re-authentication is required to fix this.
+    403:
+      description: |
+        Bad OAuth request or insufficient permissions (scopes). Unfortunately, re-authenticating won't help here.
+settings:
+      authorizationUri: https://example.com/oauth/authorize
+      accessTokenUri: https://example.com/oauth/token
+      authorizationGrants: [authorization_code, client_credentials, implicit]
+      scopes: [read, write, admin]

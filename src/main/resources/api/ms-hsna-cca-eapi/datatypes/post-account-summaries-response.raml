@@ -1,0 +1,177 @@
+#%RAML 1.0 DataType 
+type: object
+properties:
+  response:
+    type: object
+    properties:
+      sourceSystemRefId:
+        type: string
+        example: <<unique Id from source system>>
+        description: Echo of request value
+      sourceSystemName:
+        type: string
+        example: CCA
+        description: Echo of request value
+      sourceSystemVersion:
+        type: string
+        example: '1.0'
+        description: Echo of request value
+      transactionId:
+        type: string
+        example: <<Mulesoft Correlation ID>>
+        description: MuleSoft correlation ID (value of X-Correlation-ID)
+      outcome:
+        type: object
+        properties:
+          resultCode:
+            type: string
+            example: '100'
+            description: 100 = Success. For any non-success response it is 200 and the actual error is in errorDetails.errorDetail.errorCode
+          resultDescription:
+            type: string
+            example: Success
+            description: Text description of the result
+      getAccountSummaryResponse:
+        type: object
+        properties:
+          contactCollection:
+            type: array
+            description: Matching contacts
+            items:
+              type: object
+              properties:
+                contactId:
+                  type: string
+                  example: '13829902'
+                  description: CCA contact identifier
+                firstName:
+                  type: string
+                  example: John
+                  required: false
+                lastName:
+                  type: string
+                  example: Doe
+                  required: false
+                homephone:
+                  type: string
+                  example: '234567890' 
+                  required: false
+                mobilephone:
+                  type: string
+                  example: '9876543210'
+                  required: false
+                email:
+                  type: string
+                  example: johndoe@example.com
+                  required: false
+                addressCollection:
+                  type: array
+                  description: Addresses of the contact
+                  items:
+                    type: object
+                    properties:
+                      accountAddressId:
+                        type: string
+                        example: '14746847'
+                      customerRef:
+                        type: string
+                        example: '141711623'
+                      addressType:
+                        type: string
+                        example: Service
+                      houseNo:
+                        type: string
+                        example: '123'
+                        required: false
+                      addressLine1:
+                        type: string
+                        example: Main Street
+                        required: false
+                      addressLine2:
+                        type: string
+                        example: Apt 1
+                        required: false
+                      city:
+                        type: string
+                        example: Cityville
+                        required: false
+                      state:
+                        type: string
+                        example: Stateville
+                        required: false
+                      zipCode:
+                        type: string
+                        example: '12345'
+                        required: false
+                      country:
+                        type: string
+                        example: USA
+                        required: false
+                      locationType:
+                        type: string
+                        example: RESIDENTIAL
+                        required: false
+                      addressExternalId:
+                        type: string
+                        required: false
+                      contractCollection:
+                        type: array
+                        description: Contracts at the address; empty array when none
+                        items:
+                          type: object
+                          properties:
+                            contractId:
+                              type: string
+                              example: '53871076'
+                              description: Contract Identifier
+                            contractPublicRef:
+                              type: string
+                              example: '206384884'
+                              required: false
+                            optionPosition:
+                              type: integer
+                              example: 1
+                            version:
+                              type: integer
+                              example: 1
+                              required: false
+                            contractStatusCode:
+                              type: string
+                              example: c
+                            contractStatusName:
+                              type: string
+                              example: Started
+                            coverageStartDate:
+                              type: date-only
+                              example: '2024-02-11'
+                            coverageEndDate:
+                              type: date-only
+                              example: '2025-01-11'
+                            startDate:
+                              type: date-only
+                              example: '2025-01-12'
+                            productOfferCode:
+                              type: string
+                              example: '8372'
+                            contractname:
+                              type: string
+                              example: Premier Exterior Line
+                            partnerCode:
+                              type: string
+                              example: K8
+                            partnerName:
+                              type: string
+                              example: CenterPoint Energy Mississippi - K8
+                            companyName:
+                              type: string
+                              required: false
+                            contractStatusDescription:
+                              type: string
+                              example: Active
+                              required: false
+                            serviceCustomerRef:
+                              type: string
+                              required: false
+                            serviceCallFee:
+                              type: integer
+                              example: 75

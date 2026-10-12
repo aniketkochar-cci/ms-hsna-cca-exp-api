@@ -1,0 +1,41 @@
+#%RAML 1.0 DataType
+
+type: object
+description: Request body for POST /v1/contracts/search
+
+properties:
+  request:
+    type: object
+    properties:
+      sourceSystemName:
+        type: string
+        description: Calling system. Allowed - CCA
+
+      sourceSystemVersion:
+        type: string
+        minLength: 1
+        description: Version of the calling system / contract
+
+      sourceSystemRefId:
+        type: string
+        minLength: 1
+        description: Unique Id from the source system; echoed on the response, used for traceability
+
+      searchByContractRefRequest:
+        type: object
+        properties:
+          contractId:
+            type: string
+            required: true
+            minLength: 1
+            pattern: "^[0-9]+$"
+            description: Contract Id; unique identifier. Non-blank, numeric (length TBC)
+
+          contractType:
+            type: string
+            required: false
+            description: Which identifier the contract number is, e.g. HerokuId [allowed values TBC]
+
+          contractStatusActive:
+            type: boolean
+            required: false

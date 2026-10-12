@@ -1,0 +1,26 @@
+# Common properties shared across all environments
+api:
+  name: "mule-eapi-archetype-template"
+  version: "1.0.0" #"${project.version}"
+  message: "healthy"
+  
+json.logger:
+  application:
+    version: "1.0.0"
+    name: "mule-eapi-archetype-template"
+  "disabled.fields": ""
+  
+# Listener configuration
+https:
+  host: "0.0.0.0"
+  port: "8081"
+  readTimeout: "3000"
+      
+# API configuration
+  listener.basePath: "/api/*"   
+
+# Retry configuration
+until:
+  successful:
+    maxretries: "2"
+    timebetween: "30000" 

@@ -1,0 +1,20 @@
+#API specification
+api:
+  autodiscoveryID: "00000000"
+  
+#SMTP configurations
+smtp:
+  fromAddress: "HSNAESBOdysseyTest@homeserveusa.com"
+  host: "Barracuda.hsus.hsa.int"
+  port: "25"
+  toAddress: ""
+  
+#System API Congifguration- Update the system name host and path 
+dependant.system:
+  host: ""
+  basePath: ""
+  
+# AWS config
+aws:
+  region: "us-east-1"
+  role: "arn:aws:iam::698781061420:role/Mulesoft-nonprod-private-space-servicerole"

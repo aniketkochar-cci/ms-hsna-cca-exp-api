@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:aws-secrets-manager-properties-override="http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override/current/mule-aws-secrets-manager-properties-override.xsd">
+			<configuration-properties doc:name="Configuration properties" doc:id="a14ae9c2-1486-4108-acc7-1f919be19aec" file="properties/common.yaml" />
+	<email:smtp-config name="smtp-config" doc:name="Email SMTP" doc:id="8b229065-4897-4547-a9bc-d853a020701a" >
+		<email:smtp-connection host="${smtp.host}" port="${smtp.port}" />
+	</email:smtp-config>
+	<json-logger:config name="json-logger-config" doc:name="JSON Logger Config" doc:id="f0516430-bb97-4f1d-b4e0-e001b62329a7" environment="${mule.env}"/>
+	<import doc:name="Import" doc:id="0190039d-cb2a-4e0c-91d3-6971eb17cd3a" file="global-error-handler.xml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="cd252e81-cc93-4b46-bb90-a33fb19d3b87" file="properties/${mule.env}.yaml" />
+	<aws-secrets-manager-properties-override:config name="aws-secrets-manager-properties-override-Config" doc:name="AWS Secrets Manager Properties Override Config" doc:id="7739aaa0-4b44-4f98-88a6-9e653536af30" >
+		<aws-secrets-manager-properties-override:basic-connection region="${aws.region}" />
+		<aws-secrets-manager-properties-override:role-connection roleARN="${aws.role}" />
+	</aws-secrets-manager-properties-override:config>
+</mule>

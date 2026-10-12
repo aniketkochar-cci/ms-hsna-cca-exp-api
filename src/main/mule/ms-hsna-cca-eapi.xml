@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+    <http:listener-config name="ms-hsna-cca-eapi-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+    <apikit:config name="ms-hsna-cca-eapi-config" api="ms-hsna-cca-eapi/ms-hsna-cca-eapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="ms-hsna-cca-eapi-main">
+        <http:listener config-ref="ms-hsna-cca-eapi-httpListenerConfig" path="${https.listener.basePath}">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <ee:transform doc:name="Set vCorrelationId" doc:id="175b4af7-78b0-422c-9272-b8112b4a09e3">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="vCorrelationId"><![CDATA[%dw 2.0
+output application/json
+---
+(attributes.headers.transactionid default attributes.headers.transactionId) default correlationId]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<apikit:router config-ref="ms-hsna-cca-eapi-config" />
+		<error-handler ref="global-error-handler"></error-handler>
+    </flow>
+    <flow name="post:\v1\account-summaries\search:application\json:ms-hsna-cca-eapi-config">
+        <ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  response: {
+    sourceSystemRefId: "<<unique Id from source system>>",
+    sourceSystemName: "CCA",
+    sourceSystemVersion: "1.0",
+    transactionId: "<<Mulesoft Correlation ID>>",
+    outcome: {
+      resultCode: "100",
+      resultDescription: "Success"
+    },
+    getAccountSummaryResponse: {
+      contactCollection: [
+        {
+          contactId: "13829902",
+          firstName: "John",
+          lastName: "Doe",
+          homephone: "234567890",
+          mobilephone: "9876543210",
+          email: "johndoe@example.com",
+          addressCollection: [
+            {
+              accountAddressId: "14746847",
+              customerRef: "141711623",
+              addressType: "Service",
+              houseNo: "123",
+              addressLine1: "Main Street",
+              addressLine2: "Apt 1",
+              city: "Cityville",
+              state: "Stateville",
+              zipCode: "12345",
+              country: "USA",
+              locationType: "RESIDENTIAL",
+              addressExternalId: "",
+              contractCollection: [
+                {
+                  contractId: "53871076",
+                  contractPublicRef: "206384884",
+                  optionPosition: 1,
+                  version: 1,
+                  contractStatusCode: "c",
+                  contractStatusName: "Started",
+                  coverageStartDate: "2024-02-11",
+                  coverageEndDate: "2025-01-11",
+                  startDate: "2025-01-12",
+                  productOfferCode: "8372",
+                  contractname: "Premier Exterior Line",
+                  partnerCode: "K8",
+                  partnerName: "CenterPoint Energy Mississippi - K8",
+                  companyName: "",
+                  contractStatusDescription: "Active",
+                  serviceCustomerRef: "",
+                  serviceCallFee: 75
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\v1\contacts\search:application\json:ms-hsna-cca-eapi-config">
+        <ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  response: {
+    sourceSystemRefId: "<<unique Id from source system>>",
+    sourceSystemName: "CCA",
+    sourceSystemVersion: "1.0",
+    transactionId: "<<Mulesoft Correlation ID>>",
+    outcome: {
+      resultCode: "100",
+      resultDescription: "Success"
+    },
+    getContactResponse: {
+      contactCollection: [
+        {
+          contactId: "13829902",
+          accountId: "13793371",
+          customerRef: "141711622",
+          title: "",
+          firstName: "Brian",
+          lastName: "Fink",
+          suffix: "",
+          email: "fink1705@gmail.com",
+          mobilePhone: "9202316417",
+          homePhone: "",
+          workPhone: "",
+          workPhoneExtn: "",
+          status: "",
+          identityManager: "",
+          identityUniqueId: "",
+          paperless: "true",
+          paperlessStatus: "",
+          customerType: "",
+          noEmail: false,
+          noMail: false,
+          noShare: false,
+          noTeleSales: false,
+          advocateId: "H124124",
+          totalReferralsMade: 1,
+          contactSFID: "1",
+          smsMarketing: "OptedIn",
+          smsMarketingSubStatus: "Complete",
+          smsMarketingSource: "WEB-Sale",
+          emailMarketingSource: "WEB-Sale",
+          experianConfidenceMobile: "HIGH",
+          experianCheckDateMobile: "2026-05-14T14:22:54Z",
+          verifiedUSAAMemberID: "4598437598",
+          unverifiedUSAAMemberID: "4598437598",
+          addressCollection: [
+            {
+              addressType: "Service",
+              customerRef: "141711622",
+              accountAddressId: "14746846",
+              houseNo: "1746",
+              addressLine1: "1746 Addie Pkwy",
+              addressLine2: "",
+              city: "Oshkosh",
+              state: "WI",
+              zipcode: "54904",
+              country: "USA",
+              locationType: "RESIDENTIAL",
+              taxExempt: false,
+              authUser: "",
+              masterFlag: false,
+              noOfContracts: 0
+            }, 
+            {
+              addressType: "Mailing",
+              customerRef: "141711622",
+              accountAddressId: "14746847",
+              houseNo: "1723",
+              addressLine1: "1723 Addie Pkwy",
+              addressLine2: "",
+              city: "Oshkosh",
+              state: "WI",
+              zipcode: "54904",
+              country: "USA",
+              locationType: "RESIDENTIAL",
+              taxExempt: false,
+              authUser: "",
+              masterFlag: false,
+              noOfContracts: 0
+            }
+          ]
+        }, 
+        {
+          contactId: "13829905",
+          accountId: "13793376",
+          customerRef: "141711628",
+          title: "",
+          firstName: "Brian",
+          lastName: "tink",
+          suffix: "",
+          email: "tink1705@gmail.com",
+          mobilePhone: "9202316418",
+          homePhone: "",
+          workPhone: "",
+          workPhoneExtn: "",
+          status: "",
+          identityManager: "",
+          identityUniqueId: "",
+          paperless: "true",
+          paperlessStatus: "",
+          customerType: "",
+          noEmail: false,
+          noMail: false,
+          noShare: false,
+          noTeleSales: false,
+          advocateId: "H124124",
+          totalReferralsMade: 1,
+          contactSFID: "1",
+          smsMarketing: "OptedIn",
+          smsMarketingSubStatus: "Complete",
+          smsMarketingSource: "WEB-Sale",
+          emailMarketingSource: "WEB-Sale",
+          experianConfidenceMobile: "HIGH",
+          experianCheckDateMobile: "2026-05-14T14:22:54Z",
+          verifiedUSAAMemberID: "4598437597",
+          unverifiedUSAAMemberID: "4598437597",
+          addressCollection: [
+            {
+              addressType: "Service",
+              customerRef: "141711628",
+              accountAddressId: "14746849",
+              houseNo: "1700",
+              addressLine1: "1700 Addie Pkwy",
+              addressLine2: "",
+              city: "Oshkosh",
+              state: "WI",
+              zipcode: "54904",
+              country: "USA",
+              locationType: "RESIDENTIAL",
+              taxExempt: false,
+              authUser: "",
+              masterFlag: false,
+              noOfContracts: 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\v1\contracts\search:application\json:ms-hsna-cca-eapi-config">
+        <ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  response: {
+    sourceSystemRefId: "<<unique Id from source system>>",
+    sourceSystemName: "CCA",
+    sourceSystemVersion: "1.0",
+    transactionId: "<<Mulesoft Correlation ID>>",
+    outcome: {
+      resultCode: "100",
+      resultDescription: "Success"
+    },
+    getContactResponse: {
+      contactCollection: [
+        {
+          contactId: "13829902",
+          accountId: "13793371",
+          customerRef: "141711622",
+          title: "",
+          firstName: "Brian",
+          lastName: "Fink",
+          suffix: "",
+          email: "fink1705@gmail.com",
+          mobilePhone: "9202316417",
+          homePhone: "",
+          workPhone: "",
+          workPhoneExtn: "",
+          status: "",
+          identityManager: "",
+          identityUniqueId: "",
+          paperless: "true",
+          paperlessStatus: "",
+          customerType: "",
+          noEmail: false,
+          noMail: false,
+          noShare: false,
+          noTeleSales: false,
+          advocateId: "H124124",
+          totalReferralsMade: 1,
+          contactSFID: "1",
+          smsMarketing: "OptedIn",
+          smsMarketingSubStatus: "Complete",
+          smsMarketingSource: "WEB-Sale",
+          emailMarketingSource: "WEB-Sale",
+          experianConfidenceMobile: "HIGH",
+          experianCheckDateMobile: "2026-05-14T14:22:54Z",
+          verifiedUSAAMemberID: "4598437598",
+          unverifiedUSAAMemberID: "4598437598",
+          addressCollection: [
+            {
+              addressType: "Service",
+              customerRef: "141711622",
+              accountAddressId: "14746846",
+              houseNo: "1746",
+              addressLine1: "1746 Addie Pkwy",
+              addressLine2: "",
+              city: "Oshkosh",
+              state: "WI",
+              zipcode: "54904",
+              country: "USA",
+              locationType: "RESIDENTIAL",
+              taxExempt: false,
+              authUser: "",
+              masterFlag: false,
+              noOfContracts: 0
+            }, 
+            {
+              addressType: "Mailing",
+              customerRef: "141711622",
+              accountAddressId: "14746847",
+              houseNo: "1723",
+              addressLine1: "1723 Addie Pkwy",
+              addressLine2: "",
+              city: "Oshkosh",
+              state: "WI",
+              zipcode: "54904",
+              country: "USA",
+              locationType: "RESIDENTIAL",
+              taxExempt: false,
+              authUser: "",
+              masterFlag: false,
+              noOfContracts: 0
+            }
+          ]
+        }
+      ]
+    }
+  }
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

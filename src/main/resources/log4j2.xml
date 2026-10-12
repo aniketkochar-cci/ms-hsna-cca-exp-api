@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+		<!-- Switch: -DlogDest=DD or -DlogDest=FILE -->
+		<Property name="LOG_DEST">${sys:logDest}</Property>
+		<!-- Datadog API Key -->
+		<Property name="DD_API_KEY">${sys:ddApiKey}</Property>
+		<!-- App metadata -->
+		<Property name="SERVICE_NAME">mule-eapi-archetype-template</Property>
+		<Property name="ENV">${sys:mule.env:-dev}</Property>
+		<Property name="HOST_NAME">${hostName:-unknown-host}</Property>
+		<!-- File logging (CH2: use /tmp for writable location) -->
+		<Property name="LOG_DIR">${sys:logDir:-/tmp/logs}</Property>
+		<Property name="LOG_FILE_NAME">${sys:fileName:-application.log}</Property>
+	</Properties>
+	<Appenders>
+		<!-- Console (CH2 logs UI reads STDOUT; flatten multiline JSON so it shows 
+			fully) -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{ISO8601} %-5p [%t] %c - %replace{%m}{\r|\n|\t}{ }%n" />
+		</Console>
+		<!-- Datadog HTTP appender (v2) - SITE UNCHANGED -->
+		<Http name="DATADOG" method="POST"
+			url="https://http-intake.logs.datadoghq.com/api/v2/logs">
+			<Property name="Content-Type" value="application/json" />
+			<Property name="DD-API-KEY" value="${DD_API_KEY}" />
+			<JsonLayout compact="true" eventEol="true"
+				properties="true">
+				<KeyValuePair key="ddsource" value="mulesoft" />
+				<KeyValuePair key="service" value="${SERVICE_NAME}" />
+				<KeyValuePair key="ddtags" value="env:${ENV}" />
+				<KeyValuePair key="host" value="${HOST_NAME}" />
+			</JsonLayout>
+		</Http>
+		<Async name="DD_ASYNC" includeLocation="false">
+			<AppenderRef ref="DATADOG" />
+		</Async>
+		<!-- Rolling file (kept as you had it; LOG_DIR fixed so it exists in CH2) -->
+		<RollingFile name="RollingFile"
+			fileName="${LOG_DIR}/${LOG_FILE_NAME}"
+			filePattern="${LOG_DIR}/application-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="%m%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+				<SizeBasedTriggeringPolicy size="50 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+		<!-- Routing (kept) -->
+		<Routing name="LogRouter">
+			<Routes pattern="$${sys:logDest}">
+				<Route key="DD" ref="DD_ASYNC" />
+				<Route key="FILE" ref="RollingFile" />
+			</Routes>
+		</Routing>
+	</Appenders>
+	<Loggers>
+		<!-- JSON Logger -> Datadog ONLY Additivity=true so it still prints to 
+			Root Console (CH2) -->
+		<Logger name="org.mule.extension.jsonlogger.JsonLogger"
+			level="INFO">
+			<AppenderRef ref="LogRouter" />
+		</Logger>
+		<!-- Everything -> CH2 Console ONLY (and optional file) -->
+		<AsyncRoot level="INFO">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</AsyncRoot>
+	</Loggers>
+</Configuration>

@@ -1,0 +1,139 @@
+#%RAML 1.0
+title: ms-hsna-cca-eapi
+version: v1
+mediaType:
+  - application/json
+protocols:
+  - HTTPS
+
+types:
+  ErrorResponse: !include /datatypes/error-response.raml
+  PostAccountSummariesRequest: !include /datatypes/post-account-summaries-request.raml
+  PostAccountSummariesResponse: !include /datatypes/post-account-summaries-response.raml
+  PostContractsSearchRequest: !include /datatypes/post-contracts-search-request.raml
+  PostContractsSearchResponse: !include /datatypes/post-contracts-search-response.raml
+  PostContactsSearchRequest: !include /datatypes/post-contacts-search-request.raml
+  PostContactsSearchResponse: !include /datatypes/post-contacts-search-response.raml
+
+securitySchemes:
+  OAuth2.0: !include /securityScheme/OAuth20.raml
+
+traits:
+  headers: !include /traits/response-headers.raml
+
+securedBy:
+  - OAuth2.0
+
+/v1:
+  /account-summaries:
+    /search:
+      post:
+        displayName: Get Account Summary
+        is:
+          - headers
+          
+        body:
+          application/json:
+            type: PostAccountSummariesRequest
+            example: !include /examples/post-account-summaries-request.raml
+
+        responses:
+          200:
+            body:
+              application/json:
+                type: PostAccountSummariesResponse
+                examples:
+                  contractStatusActive: !include /examples/post-account-summaries-contractStatusActive-response.raml
+                  contractStatusActiveOmitted: !include /examples/post-account-summaries-contractStatusActive-omitted-response.raml
+                  noContracts: !include /examples/post-account-summaries-no-contracts-response.raml
+          404:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/error-response-404.raml
+          400:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/error-response-400.raml
+          502:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/error-response-502.raml
+
+  /contracts:
+    /search:
+      post:
+        displayName: searchByContractRef
+        description: |
+          Find a customer from a contract Id. A contract number is unique, so 0 or 1 contact is returned.
+        is: 
+          - headers
+
+        body:
+          application/json:
+            type: PostContractsSearchRequest
+            example: !include /examples/post-contracts-search-request.raml
+
+        responses:
+          200:
+            body:
+              application/json:
+                type: PostContractsSearchResponse
+                examples: !include /examples/post-contracts-search-response.raml
+          404:
+            body:
+              application/json:
+                type: ErrorResponse
+                examples: !include /examples/post-contract-404-error-response.raml
+          400:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/post-contract-400-error-response.raml
+          502:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/error-response-502.raml
+
+  /contacts:
+    /search:
+      post:
+        displayName: Get Contact
+        description: Read-only contact search for CCA Contact IDV. At least one getContactRequest criterion must be non-blank.
+        is:
+          - headers
+        securedBy:
+          - OAuth2.0
+
+        body:
+          application/json:
+            type: PostContactsSearchRequest
+            example: !include /examples/post-contacts-search-request.raml
+
+        responses:
+          200:
+            body:
+              application/json:
+                type: PostContactsSearchResponse
+                examples:
+                  multipleContacts: !include /examples/post-contacts-search-multiple-contacts-response.raml
+                  singleContact: !include /examples/post-contacts-search-single-contact-response.raml
+                  noContactFound: !include /examples/post-contacts-search-no-contact-response.raml
+          404:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/post-contacts-search-error-404.raml
+          400:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/post-contacts-search-error-400.raml
+          502:
+            body:
+              application/json:
+                type: ErrorResponse
+                example: !include /examples/post-contacts-search-error-502.raml
