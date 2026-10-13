@@ -1,5 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="postContractsSearchSubFlow" doc:id="a59c2b78-29f9-438b-96f9-97a3d068781e" >
+		<json-logger:logger doc:name="Start Logger" doc:id="95818450-2118-4575-8ea9-a7d7e59ab496" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["HSBT-30583 mocked GET /v1/partners/{partnerId}"]' >
+			<json-logger:content ><![CDATA[#[output application/json
+---
+{
+	partnerId: attributes.uriParams.partnerId default attributes.uriParams.'partnerId'
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="var: commonHeaders" doc:id="e842690a-e13e-4a2d-99c7-4453f4351806">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dwl/postContractsSearch/v-commonHeaders.dwl" variableName="commonHeaders" />
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="var : httpOperation" doc:id="5721282e-2892-47c6-91ed-61314bcb7931">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dwl/postContractsSearch/v-contractSearchHttpOperation.dwl" variableName="httpOperation" />
+			</ee:variables>
+		</ee:transform>
+		<try doc:name="Try" doc:id="30866e99-a4dd-4110-8ef9-31ffa0ae84f3" >
+			<flow-ref doc:name="Call Papi" doc:id="4c602941-fe2b-455b-982f-d61389d46f46" name="httpRequestSubFlow" />
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a14d460e-c780-4f16-8333-cd52f1e82ae6" type="HTTP:NOT_FOUND" when='#[(error.errorMessage.payload.response.outcome.resultCode ~= "200" and error.errorMessage.payload.response.errorDetails.errorCode ~= "404")]'>
+					<set-variable value="404" doc:name="httpStatus" doc:id="69a624cd-6959-4691-9faf-a35f9fdc8b5c" variableName="httpStatus" />
+					<ee:transform doc:name="Preparing 404 Payload" doc:id="cad52040-2c41-4691-bc17-e5fc9d495d38" >
+						<ee:message >
+							<ee:set-payload resource="dwl/postContractsSearch/p-error404Message.dwl" />
+						</ee:message>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Prepare Response" doc:id="a04bf545-28b2-4270-b784-239be425b52e" >
+			<ee:message >
+				<ee:set-payload resource="dwl/postContractsSearch/p-responsePayload.dwl" />
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="24bb68b3-422c-46b2-a5db-1b9bd5ee1ccc" config-ref="json-logger-config" tracePoint="END" message='#["End of GET partner profile sub flow  - /v1/partners/{partnerId} response"]' >
+			<json-logger:content ><![CDATA[#[output application/json
+---
+{
+	httpStatus: vars.httpStatus,
+	response: payload
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>

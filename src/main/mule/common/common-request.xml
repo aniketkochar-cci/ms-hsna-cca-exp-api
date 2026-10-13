@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<sub-flow name="httpRequestSubFlow" doc:id="6d41b916-e5c7-41f3-80e3-ee5a7323e94d" >
+		<json-logger:logger doc:name="Start Logger " doc:id="5204945a-5aa5-4300-b525-82a1e6183fd2" config-ref="json-logger-config" message="Start of common request sub flow" correlationId="#[vars.vCorrelationId]" >
+			<json-logger:content ><![CDATA[#[{}]]]></json-logger:content>
+		</json-logger:logger>
+		<http:request doc:name="Request to Papi" doc:id="fd1bbce1-77ef-4a63-b028-1764e2503b7b" config-ref="http-request-config" method="#[vars.httpOperation.method]" path="#[vars.httpOperation.path]" sendCorrelationId="ALWAYS" correlationId="#[vars.vCorrelationId]" responseTimeout="${httpRequest.responseTimeOut}">
+			<http:body><![CDATA[#[%dw 2.0
+output application/json
+---
+vars.httpOperation.payload default payload default {}]]]></http:body>
+			<http:headers><![CDATA[#[%dw 2.0
+output application/json
+---
+vars.httpOperation.headers default {}]]]></http:headers>
+			<http:uri-params><![CDATA[#[%dw 2.0
+output application/json
+---
+vars.httpOperation.uriParameters default {}]]]></http:uri-params>
+			<http:query-params><![CDATA[#[%dw 2.0
+output application/json
+---
+vars.httpOperation.queryParameters default {}]]]></http:query-params>
+		</http:request>
+		<json-logger:logger doc:name="End Logger " doc:id="343770bd-d56d-40af-b0b6-2485ee1c147a" config-ref="json-logger-config" tracePoint="END" message="End of common request sub flow" correlationId="#[vars.vCorrelationId]" >
+			<json-logger:content ><![CDATA[#[{}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:aws-secrets-manager-properties-override="http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override"
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:aws-secrets-manager-properties-override="http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override"
 	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:email="http://www.mulesoft.org/schema/mule/email"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
 http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override/current/mule-aws-secrets-manager-properties-override.xsd">
@@ -18,4 +20,12 @@ http://www.mulesoft.org/schema/mule/aws-secrets-manager-properties-override http
 		<aws-secrets-manager-properties-override:basic-connection region="${aws.region}" />
 		<aws-secrets-manager-properties-override:role-connection roleARN="${aws.role}" />
 	</aws-secrets-manager-properties-override:config>
+	<http:request-config name="http-request-config"
+		doc:name="HTTP Request config"
+		doc:id="229f0639-4d03-4dfe-a95c-8130edcd69f0"
+		basePath="#[vars.httpOperation.basePath]">
+		<http:request-connection
+			host="#[vars.httpOperation.host]" port="#[vars.httpOperation.port]"
+			protocol="HTTPS" />
+	</http:request-config>
 </mule>
