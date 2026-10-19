@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="postContactsSearch-sub-flow" doc:id="dadcae17-9cd2-437b-bbe6-967c8c878104" >
+		<json-logger:logger doc:name="Start Logger" doc:id="8dd993fc-a473-49e7-832f-d01c18215b20" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["HSBT-30583  GET /v1/partners/{partnerId}"]' >
+			<json-logger:content ><![CDATA[#[output application/json
+---
+{
+	partnerId: attributes.uriParams.partnerId default attributes.uriParams.'partnerId'
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<flow-ref doc:name="validate-contact-request-sub-flow" doc:id="195e0829-70f5-47bf-ade7-897612b59d43" name="validate-contact-request-sub-flow"/>
+		<ee:transform doc:name="var: commonHeaders" doc:id="b0e1af1e-e9b8-484c-a375-0b3917188ee3" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable resource="dwl/postContactsSearch/v-commonHeaders.dwl" variableName="commonHeaders" />
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="var : httpOperation" doc:id="13c09240-f0db-4fb8-87da-ae9272e54d97" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable resource="dwl/postContactsSearch/v-contactSearchHttpOperation.dwl" variableName="httpOperation" />
+			</ee:variables>
+		</ee:transform>
+		<try doc:name="Try" doc:id="8f9e9350-d271-4c8b-98b6-6d8000805618" >
+			<flow-ref doc:name="Call Papi" doc:id="1ee6e66d-35c9-434a-a359-bfad1148278b" name="httpRequestSubFlow" />
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="8687fb59-8db3-4d70-99a8-c55b311943f9" type="HTTP:NOT_FOUND" when='#[(error.errorMessage.payload.response.outcome.resultCode ~= "200" and error.errorMessage.payload.response.errorDetails.errorCode ~= "404")]' >
+					<set-variable value="404" doc:name="httpStatus" doc:id="1faa134e-4c03-454f-897e-acc7e95c46d6" variableName="httpStatus" />
+					<ee:transform doc:name="Preparing 404 Payload" doc:id="a4f7882f-d5e9-4612-9e55-206a87fde85f" >
+						<ee:message >
+							<ee:set-payload resource="dwl/postContactsSearch/p-error404Message.dwl" />
+						</ee:message>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Prepare Response" doc:id="446072cd-ccdd-4946-9bbf-22524cf1f18b" >
+			<ee:message >
+				<ee:set-payload resource="dwl/postContactsSearch/p-responsePayload.dwl" />
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="06718ed2-0973-4b84-ae4e-b430880f0cd5" config-ref="json-logger-config" tracePoint="END" message='#["End of GET partner profile sub flow  - /v1/partners/{partnerId} response"]' >
+			<json-logger:content ><![CDATA[#[output application/json
+---
+{
+	httpStatus: vars.httpStatus,
+	response: payload
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+	<sub-flow name="validate-contact-request-sub-flow" doc:id="2a9ab6db-61c6-453f-bd89-ca446e6b87f4" >
+		<json-logger:logger doc:name="Start Logger" doc:id="41fcd0c3-f3d3-41c9-b3fe-ebb13ac99153" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["HSBT-30583 mocked GET /v1/partners/{partnerId}"]' >
+			<json-logger:content ><![CDATA[#[output application/json
+---
+{
+	partnerId: attributes.uriParams.partnerId default attributes.uriParams.'partnerId'
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="var: contactValidation" doc:id="785adbda-53ed-450c-9c52-98e0d59cfef6" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dwl.postContactSearch/v-contactValidation.dwl" variableName="contactValidation" />
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="438f6bb5-3483-4850-b8d7-596175abe025" >
+			<when expression="#[((vars.contactValidation.envelopeOk and vars.contactValidation.hasCriteria) == true)]"/>
+		</choice>
+		<json-logger:logger doc:name="End Logger" doc:id="ce7a47e0-a9be-43cd-8afb-f699486aacee" config-ref="json-logger-config" tracePoint="END" message='#["End of GET partner profile sub flow  - /v1/partners/{partnerId} response"]' >
+			<json-logger:content ><![CDATA[#[output application/json
+---
+{
+	httpStatus: vars.httpStatus,
+	response: payload
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>
