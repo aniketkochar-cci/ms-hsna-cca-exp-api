@@ -96,6 +96,7 @@ output application/json
 } as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+		<flow-ref doc:name='post-account-summaries-sub-flow' doc:id="4aab85fb-e042-4d20-875c-4dbea4482b10" name="post-account-summaries-sub-flow"/>
     </flow>
     <flow name="post:\v1\contacts\search:application\json:ms-hsna-cca-eapi-config">
         <flow-ref doc:name="postContactsSearch-sub-flow" doc:id="f83153bd-ed10-40ea-a0b8-8f6c853248ff" name="postContactsSearch-sub-flow"/>

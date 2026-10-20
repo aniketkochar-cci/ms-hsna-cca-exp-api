@@ -1,14 +1,15 @@
 # Common properties shared across all environments
 api:
   name: "ms-hsna-cca-eapi"
-  version: "1.0.0" #"${project.version}"
+  version: "1.0.0"
   message: "healthy"
   
 json.logger:
   application:
     version: "1.0.0"
     name: "ms-hsna-cca-eapi"
-  "disabled.fields": ""
+    disabled.fields: ""
+    mask.fields: ""
   
 # Listener configuration
 https:

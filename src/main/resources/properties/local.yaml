@@ -2,12 +2,20 @@
 api:
   autodiscoveryID: ""
   
-#System API Congifguration- Update the system name host and path 
-dependant.system:
-  host: ""
-  basePath: ""
+#Process API Congifguration
+cca:
+  papi:
+    host: ""
+    basePath: ""
   
 # AWS config
 aws:
   region: "us-east-1"
   role: "arn:aws:iam::698781061420:role/Mulesoft-nonprod-private-space-servicerole"
+
+#SMTP configurations
+smtp:
+  fromAddress: ""
+  host: ""
+  port: ""
+  toAddress: ""

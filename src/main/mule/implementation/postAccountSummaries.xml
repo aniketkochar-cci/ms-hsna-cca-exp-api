@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="post-account-summaries-sub-flow" doc:id="9851db7c-ce6b-4bb0-95d4-c262044d1044" >
+		<json-logger:logger doc:name="Start Logger" doc:id="93525d8a-6763-4e2c-9806-fe76969ca646" config-ref="json-logger-config" message='Start of $(flow.name)' >
+			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(payload) 
+}]]]></json-logger:content>
+		</json-logger:logger>
+		<ee:transform doc:name="var: commonHeaders" doc:id="23541149-1b02-4876-9844-70d8eb3ef601">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dwl/postAccountSummariesSearch/v-commonHeaders.dwl" variableName="commonHeaders" />
+			
+</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="var : httpOperation" doc:id="4d5d8355-b258-405b-afec-ec866455dcb1">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dwl/postAccountSummariesSearch/v-accountSummariesSearchHttpOperation.dwl" variableName="httpOperation" />
+			</ee:variables>
+		</ee:transform>
+		<try doc:name="Try" doc:id="eb5b01f2-7385-4d2b-8843-08e88ef1514c" >
+			<flow-ref doc:name="Call Papi" doc:id="5fc1a1d2-274e-4cb8-9f77-a69d2b676910" name="httpRequestSubFlow" />
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="17a380b1-8d32-4f78-af2b-94d77c45afea" type="HTTP:NOT_FOUND" when='#[(error.errorMessage.payload.response.outcome.resultCode ~= "200" and error.errorMessage.payload.response.errorDetails.errorCode ~= "404")]'>
+					<set-variable value="404" doc:name="httpStatus" doc:id="21a3b93c-c7ac-4251-962b-9d55e016762f" variableName="httpStatus" />
+					<ee:transform doc:name="Preparing 404 Payload" doc:id="bb40b8ee-30e6-4fda-b294-43f5a853af8c" >
+						<ee:message >
+							<ee:set-payload resource="dwl/postAccountSummariesSearch/p-error404Message.dwl" />
+						</ee:message>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Prepare Response" doc:id="d8fb121d-d0f7-4938-b6fe-8a6935579a19" >
+			<ee:message >
+				<ee:set-payload resource="dwl/postAccountSummariesSearch/p-responsePayload.dwl" />
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Logger" doc:id="4844b605-58c0-4d6d-8884-6038c859ea40" config-ref="json-logger-config" tracePoint="END" message='End of $(flow.name)' >
+			<json-logger:content ><![CDATA[#[output application/json
+---
+{
+	httpStatus: vars.httpStatus,
+	response: payload
+}]]]></json-logger:content>
+		</json-logger:logger>
+	</sub-flow>
+</mule>
