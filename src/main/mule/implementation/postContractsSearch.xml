@@ -6,12 +6,7 @@
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<sub-flow name="postContractsSearchSubFlow" doc:id="a59c2b78-29f9-438b-96f9-97a3d068781e" >
-		<json-logger:logger doc:name="Start Logger" doc:id="95818450-2118-4575-8ea9-a7d7e59ab496" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["HSBT-30583 mocked GET /v1/partners/{partnerId}"]' >
-			<json-logger:content ><![CDATA[#[output application/json
----
-{
-	partnerId: attributes.uriParams.partnerId default attributes.uriParams.'partnerId'
-}]]]></json-logger:content>
+		<json-logger:logger doc:name="Start Logger" doc:id="95818450-2118-4575-8ea9-a7d7e59ab496" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["Start of $(flow.name)"]' >
 		</json-logger:logger>
 		<ee:transform doc:name="var: commonHeaders" doc:id="e842690a-e13e-4a2d-99c7-4453f4351806">
 			<ee:message />
@@ -43,7 +38,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-payload resource="dwl/postContractsSearch/p-responsePayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<json-logger:logger doc:name="End Logger" doc:id="24bb68b3-422c-46b2-a5db-1b9bd5ee1ccc" config-ref="json-logger-config" tracePoint="END" message='#["End of GET partner profile sub flow  - /v1/partners/{partnerId} response"]' >
+		<json-logger:logger doc:name="End Logger" doc:id="24bb68b3-422c-46b2-a5db-1b9bd5ee1ccc" config-ref="json-logger-config" tracePoint="END" message='#["End of $(flow.name)"]' >
 			<json-logger:content ><![CDATA[#[output application/json
 ---
 {

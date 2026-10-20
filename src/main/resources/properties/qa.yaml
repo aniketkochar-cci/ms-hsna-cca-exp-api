@@ -1,14 +1,8 @@
 #API specification
 api:
-  autodiscoveryID: "00000000"
+  autodiscoveryID: ""
   
-#SMTP configurations
-smtp:
-  fromAddress: "HSNAESBOdysseyTest@homeserveusa.com"
-  host: "Barracuda.hsus.hsa.int"
-  port: "25"
-  toAddress: ""
-  
+
 #System API Congifguration- Update the system name host and path 
 dependant.system:
   host: ""
