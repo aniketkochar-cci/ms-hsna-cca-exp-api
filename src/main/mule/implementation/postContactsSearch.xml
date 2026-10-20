@@ -6,13 +6,7 @@
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<sub-flow name="postContactsSearch-sub-flow" doc:id="dadcae17-9cd2-437b-bbe6-967c8c878104" >
-		<json-logger:logger doc:name="Start Logger" doc:id="8dd993fc-a473-49e7-832f-d01c18215b20" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["HSBT-30583  GET /v1/partners/{partnerId}"]' >
-			<json-logger:content ><![CDATA[#[output application/json
----
-{
-	partnerId: attributes.uriParams.partnerId default attributes.uriParams.'partnerId'
-}]]]></json-logger:content>
-		</json-logger:logger>
+		<json-logger:logger doc:name="Start Logger" doc:id="acd8311b-cc64-4862-81ed-07a7f12fbdee" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["Start of $(flow.name)"]' />
 		<flow-ref doc:name="validate-contact-request-sub-flow" doc:id="195e0829-70f5-47bf-ade7-897612b59d43" name="validate-contact-request-sub-flow"/>
 		<ee:transform doc:name="var: commonHeaders" doc:id="b0e1af1e-e9b8-484c-a375-0b3917188ee3" >
 			<ee:message />
@@ -44,7 +38,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-payload resource="dwl/postContactsSearch/p-responsePayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<json-logger:logger doc:name="End Logger" doc:id="06718ed2-0973-4b84-ae4e-b430880f0cd5" config-ref="json-logger-config" tracePoint="END" message='#["End of GET partner profile sub flow  - /v1/partners/{partnerId} response"]' >
+		<json-logger:logger doc:name="End Logger" doc:id="e2291cb2-b995-4fa6-8d93-78aab661c093" config-ref="json-logger-config" tracePoint="END" message='#["End of $(flow.name)"]' >
 			<json-logger:content ><![CDATA[#[output application/json
 ---
 {
@@ -54,13 +48,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</json-logger:logger>
 	</sub-flow>
 	<sub-flow name="validate-contact-request-sub-flow" doc:id="2a9ab6db-61c6-453f-bd89-ca446e6b87f4" >
-		<json-logger:logger doc:name="Start Logger" doc:id="41fcd0c3-f3d3-41c9-b3fe-ebb13ac99153" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["HSBT-30583 mocked GET /v1/partners/{partnerId}"]' >
-			<json-logger:content ><![CDATA[#[output application/json
----
-{
-	partnerId: attributes.uriParams.partnerId default attributes.uriParams.'partnerId'
-}]]]></json-logger:content>
-		</json-logger:logger>
+		<json-logger:logger doc:name="Start Logger" doc:id="5c1d8c51-a23a-4ecd-90cf-eaac2a5d5ff5" config-ref="json-logger-config" tracePoint="BEFORE_REQUEST" message='#["Start of $(flow.name)"]' />
 		<ee:transform doc:name="var: contactValidation" doc:id="785adbda-53ed-450c-9c52-98e0d59cfef6" >
 			<ee:message >
 			</ee:message>
@@ -71,7 +59,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<choice doc:name="Choice" doc:id="438f6bb5-3483-4850-b8d7-596175abe025" >
 			<when expression="#[((vars.contactValidation.envelopeOk and vars.contactValidation.hasCriteria) == true)]"/>
 		</choice>
-		<json-logger:logger doc:name="End Logger" doc:id="ce7a47e0-a9be-43cd-8afb-f699486aacee" config-ref="json-logger-config" tracePoint="END" message='#["End of GET partner profile sub flow  - /v1/partners/{partnerId} response"]' >
+		<json-logger:logger doc:name="End Logger" doc:id="b107915d-566e-4e2f-8629-6227d50aa3b3" config-ref="json-logger-config" tracePoint="END" message='#["End of $(flow.name)"]' >
 			<json-logger:content ><![CDATA[#[output application/json
 ---
 {
