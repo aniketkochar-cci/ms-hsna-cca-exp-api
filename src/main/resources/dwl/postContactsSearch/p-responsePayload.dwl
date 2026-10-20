@@ -68,8 +68,7 @@ fun mapContact(c) = {
 			resultCode: "200",
 			resultDescription: "No contact found"
 		}
-	        else
-	            {
+		else {
 			resultCode: "100",
 			resultDescription: "Success"
 		},
@@ -77,14 +76,13 @@ fun mapContact(c) = {
 			errorDetails: {
 				errorDetail: {
 					errorCode: "404",
-					errorDescription: "No contact found for the supplied contract"
+					errorDescription: "No contact found for the supplied search criteria"
 				}
 			}
 		}
-	        else
-	            {
+		else {
 			getContactResponse: {
-				contactCollection: [mapContact(contacts[0])]
+				contactCollection: contacts map mapContact($)
 			}
 		})
 	}
